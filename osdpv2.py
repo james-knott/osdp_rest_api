@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 """
 Open Source Development Platform.
 
@@ -19,9 +18,6 @@ import socket
 import multiprocessing
 import gunicorn.app.base
 from gunicorn.six import iteritems
-
-def number_of_workers():
-    return (multiprocessing.cpu_count() * 2) + 1
 
 __author__ = "James Knott (@Ghettolabs)"
 __copyright__ = "Copyright 2018 James Knott"
@@ -44,6 +40,11 @@ post this json to endpoint to create project
     }
 """
 REMOTE_SERVER = "www.github.com"
+
+
+def number_of_workers():
+    return (multiprocessing.cpu_count() * 2) + 1
+
 
 def setup_logging():
     logger = logging.getLogger()
