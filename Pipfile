@@ -1,0 +1,33 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+"boto3" = "==1.7.14"
+botocore = "==1.10.14"
+docutils = "==0.14"
+"gitdb2" = "==2.0.3"
+jmespath = "==0.9.3"
+python-dateutil = "==2.7.2"
+python-vagrant = "==0.5.15"
+"ruamel.yaml" = "==0.15.37"
+"s3transfer" = "==0.1.13"
+"smmap2" = "==2.0.3"
+docker-py = ">=1.7.0rc2"
+pytest = ">=2.5.2"
+behave = ">=1.2.4"
+expects = ">=0.4"
+six = ">=1.3.0"
+Flask = "*"
+Flask-RESTful = "*"
+Flask-JWT = "*"
+GitPython = "==2.1.9"
+dockerpty = "*"
+gunicorn = "*"
+Flask-Script = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"
