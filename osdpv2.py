@@ -2,6 +2,7 @@
 Open Source Development Platform.
 
 """
+import osdpbase
 import logging
 import sys
 #from ruamel.yaml import YAML
@@ -57,7 +58,7 @@ def setup_logging():
     logger.setLevel(logging.INFO)
     return logger
 
-def connected(REMOTE_SERVER):
+def is_connected(REMOTE_SERVER):
     try:
         host = socket.gethostbyname(REMOTE_SERVER)
         s = socket.create_connection((host, 80), 2)
@@ -102,29 +103,6 @@ class StandaloneApplication(gunicorn.app.base.BaseApplication):
     def load(self):
         return self.application
 
-
-
-
-def init():
-    print("Hello Init")
-
-def new():
-    print("Hello New")
-
-def update():
-    print("Hello Update")
-
-def backup(projectname):
-    print("Hello Project {}".format(project))
-
-def destroy(projectname):
-    print("Hello Project {}".format(project))
-
-def start(projectname):
-    print("Hello Project {}".format(project))
-
-def stop(projectname):
-    print("Hello Project {}".format(project))
 
 def server():
     init_db()
@@ -262,7 +240,8 @@ def server():
 if __name__ == "__main__":
     logger = setup_logging() # sets up logging
     logger.info("Welcome to Open Source Development Platform!")
-    connected(REMOTE_SERVER) # checks to see if connected to the internet
+    is_connected(REMOTE_SERVER) # checks to see if connected to the internet
+    test = osdpbase.OSDPBase()
     # sets up command line arguments
     parser = argparse.ArgumentParser(description='Open Source Development Platform')
     parser.add_argument("--init","-i", required=False, dest='init',action='store_true',help='Initialize new project folder')
@@ -277,23 +256,27 @@ if __name__ == "__main__":
     result = parser.parse_args()
 
     if result.init:
-        init()
+        logger.info("Pulling down yaml file so you can customize your environment!")
+        test.init()
     elif result.new:
-        new()
+        test.new()
     elif result.update:
-        update()
+        test.update()
     elif result.backup:
-        project = result.backup
-        backup(projectname=project)
+        logger.info("We are backing up all your projects to S3!")
+        test.backup()
     elif result.destroy:
         project = result.destroy
-        destroy(projectname=project)
+        logger.info("We are destroying your vagrant box now!")
+        test.destroy(projectname=project)
     elif result.start:
         project = result.start
-        start(projectname=project)
+        logger.info("We are starting your development environment now!")
+        test.start(projectname=project)
     elif result.stop:
         project = result.stop
-        stop(projectname=project)
+        logger.info("We are stopping your vagrant box now!")
+        test.stop(projectname=project)
     elif result.server:
         server()
 
