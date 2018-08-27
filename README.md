@@ -4,6 +4,7 @@
 - Library of working Vagrantfiles
 - Automatic project backup to S3
 - Manages Docker environments
+- Server only mode with REST API
 
 ## Requirements
 - virtualbox 5.x
