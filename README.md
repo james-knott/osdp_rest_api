@@ -25,8 +25,7 @@
 - When your done with the project or no longer want the vagrant environment just do osdpv3.py --destroy
 
 ## Developers
-- Please use developer branch
-- Create a virtualenv for your development and testing then move your code over to a clean folder to push up your changes.
+- Please use developer branch and pull request
 
 ## TODO:
 
