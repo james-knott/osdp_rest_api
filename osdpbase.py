@@ -27,6 +27,7 @@ import shutil
 import docker
 import dockerpty
 import socket
+import requests
 
 __author__ = "James Knott (@Ghettolabs)"
 __copyright__ = "Copyright 2018 James Knott"
@@ -79,6 +80,7 @@ class OSDPBase(object):
         self.linux = ['ubuntu', 'centos', 'debian', 'amazon', 'dcos-vagrant', 'xenial', 'docker', 'amazonlinux', 'docker-lambda']
         self.logger = setup_logging()
         self.REMOTE_SERVER = "www.github.com"
+        self.OSDPAPI = "http://osdp.ghettolabs.io:8080"
     def init(self):
         if is_connected(self.REMOTE_SERVER):
             try:
@@ -110,7 +112,7 @@ class OSDPBase(object):
                     yaml = YAML()
                     code = yaml.load(inp)
                     #yaml.dump(code, sys.stdout) test what they dynamic file looks like
-                    self.logger("Your new projecct name is", code['osdp']['project'])
+                    self.logger("Your new project name is", code['osdp']['project'])
                     if not os.path.exists(self.final_directory):
                         os.makedirs(self.final_directory)
                     with open('osdp/configuration/settings.yml', "w") as f:
@@ -146,6 +148,8 @@ class OSDPBase(object):
         url = "https://github.com/james-knott/" + dataMap['osdp']['linux'] + ".git"
         self.logger.info("Downloading project files!")
         Repo.clone_from(url, final_directory , branch="master")
+        self.save_to_db(dataMap)
+        self.get_project_from_db(dataMap['osdp']['project'])
         if dataMap['osdp']['platform'] == 'docker':
             IMG_SRC = dataMap['osdp']['dockerdeveloperimage']
             client = docker.Client()
@@ -269,7 +273,24 @@ class OSDPBase(object):
             self.logger.info("Could not find settings file. Downloading new copy. Please edit then run osdp --new again!")
             self.init()
 
+    def save_to_db(self, settings):
+        payload = {
+        "platform": settings['osdp']['platform'],
+        "linux": settings['osdp']['linux'],
+        "username": settings['osdp']['username'],
+        "password": settings['osdp']['password'],
+        "project": settings['osdp']['project'],
+        "github": "https://github.com/" + settings['osdp']['username'] + "/" + settings['osdp']['linux'] + ".git"
+        }
+        ENDPOINT = self.OSDPAPI + "/project/" + settings['osdp']['project']
+        response = requests.post(ENDPOINT, json=payload)
+        print(response)
 
+    def get_project_from_db(self, project):
+        ENDPOINT = self.OSDPAPI + "/project/" + project
+        response = requests.get(ENDPOINT)
+        oneproject = response.json()
+        print(oneproject['project']['name'])
 
 
 
