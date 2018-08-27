@@ -5,7 +5,6 @@ Open Source Development Platform.
 import osdpbase
 import logging
 import sys
-#from ruamel.yaml import YAML
 import argparse
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api
