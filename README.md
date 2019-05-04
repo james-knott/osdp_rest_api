@@ -24,6 +24,7 @@
 - python3 osdp3.py --start company (company works well for me but can be any name or project you put under project in yaml file) At the end it spits out port number.
 - Connect with your favorite ssh client or navigate to project/company/vagrant and do a vagrant ssh
 - When your done with the project or no longer want the vagrant environment just do osdpv3.py --destroy
+- The server mode needs to be enabled by using --server in order to work
 
 ## Developers
 - Please use developer branch and pull request
