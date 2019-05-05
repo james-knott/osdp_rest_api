@@ -80,8 +80,11 @@ class OSDPBase(object):
         self.linux = ['ubuntu', 'centos', 'debian', 'amazon', 'dcos-vagrant', 'xenial', 'docker', 'amazonlinux', 'docker-lambda']
         self.logger = setup_logging()
         self.REMOTE_SERVER = "www.github.com"
-        self.OSDPAPI = "http://osdp.ghettolabs.io:8080"
+        self.introbanner = ""
+        self.OSDPAPI = "http://127.0.0.1:8080"
+        self.intro()
     def init(self):
+        self.intro()
         if is_connected(self.REMOTE_SERVER):
             try:
                 if not os.path.exists(self.final_directory):
@@ -147,7 +150,11 @@ class OSDPBase(object):
             sys.exit(1)
         url = "https://github.com/james-knott/" + dataMap['osdp']['linux'] + ".git"
         self.logger.info("Downloading project files!")
-        Repo.clone_from(url, final_directory , branch="master")
+        try:
+            Repo.clone_from(url, final_directory , branch="master")
+        except:
+            self.logger.info("The folder already exists with that project name. Try python3 osdpv2 --start projectname")
+            sys.exit(1)
         self.save_to_db(dataMap)
         self.get_project_from_db(dataMap['osdp']['project'])
         if dataMap['osdp']['platform'] == 'docker':
@@ -292,7 +299,28 @@ class OSDPBase(object):
         oneproject = response.json()
         print(oneproject['project']['name'])
 
+    def intro(self):
+        self.introbanner = """
 
 
+ .----------------.  .----------------.  .----------------.  .----------------.
+| .--------------. || .--------------. || .--------------. || .--------------. |
+| |     ____     | || |    _______   | || |  ________    | || |   ______     | |
+| |   .'    `.   | || |   /  ___  |  | || | |_   ___ `.  | || |  |_   __ \   | |
+| |  /  .--.  \  | || |  |  (__ \_|  | || |   | |   `. \ | || |    | |__) |  | |
+| |  | |    | |  | || |   '.___`-.   | || |   | |    | | | || |    |  ___/   | |
+| |  \  `--'  /  | || |  |`\____) |  | || |  _| |___.' / | || |   _| |_      | |
+| |   `.____.'   | || |  |_______.'  | || | |________.'  | || |  |_____|     | |
+| |              | || |              | || |              | || |              | |
+| '--------------' || '--------------' || '--------------' || '--------------' |
+ '----------------'  '----------------'  '----------------'  '----------------'
 
+For local usage you must start the server first. python3 osdpv2.py --server &
+For team usage your server is already running but you must edit the OSDPAPI server URL so that your team can connect.
 
+1. Type python3 osdpv2.py --init to bring down config file. Then edit config file to your needs.
+2. Type python3 osdpv2.py --new to use the new config file and pull down the artifacts.
+3. Type python3 osdpv2.py --start "projectname" to bring up the virtualbox or docker environment.
+
+"""
+        print(self.introbanner)
