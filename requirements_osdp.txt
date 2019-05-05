@@ -19,3 +19,5 @@ dockerpty
 gunicorn
 flask_script
 requests
+flask_restful
+flask_jwt
